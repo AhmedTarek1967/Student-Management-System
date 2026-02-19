@@ -11,5 +11,5 @@ import java.util.UUID;
 
 @Repository
 public interface StudentRepo extends JpaRepository<Student,Integer> {
-	Student findById(int id);
+	Optional findById(int id);
 }

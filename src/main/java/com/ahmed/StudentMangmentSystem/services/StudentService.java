@@ -4,6 +4,7 @@ import com.ahmed.StudentMangmentSystem.dtos.*;
 import com.ahmed.StudentMangmentSystem.entities.Book;
 import com.ahmed.StudentMangmentSystem.entities.Course;
 import com.ahmed.StudentMangmentSystem.entities.Student;
+import com.ahmed.StudentMangmentSystem.exceptions.studentexceptions.StudentNotFoundException;
 import com.ahmed.StudentMangmentSystem.mapper.CoursesMapper;
 import com.ahmed.StudentMangmentSystem.mapper.StudentMapper;
 import com.ahmed.StudentMangmentSystem.repos.BooksRepo;
@@ -41,12 +42,12 @@ public class StudentService {
 					.toList() ;
 	}
 	
-	public StudentName getStudentById(int id) {
+	public StudentName getStudentById(int id) throws Throwable {
 		
-		Student student = studentRepo.findById(id);
+		Student student = (Student) studentRepo.findById(id).orElseThrow(()-> new StudentNotFoundException(id));
 		
 		return new StudentName(student.getFirstName(), student.getLastName());
-	
+		
 	}
 	
 	public StudentResponseDto createStudent(StudentDto studentDto){
@@ -55,8 +56,8 @@ public class StudentService {
 		return studentMapper.fromEntityToDto(savedStudent);
 	}
 	
-	public StudentResponseDto updateStudentById(int id, @NonNull StudentDto studentDto){
-		Student student = studentRepo.findById(id);
+	public StudentResponseDto updateStudentById(int id, @NonNull StudentDto studentDto) throws Throwable {
+		Student student =(Student) studentRepo.findById(id).orElseThrow(()-> new StudentNotFoundException(id));
 		student.setFirstName(studentDto.firstName());
 		student.setLastName(studentDto.lastName());
 		student.setAge(studentDto.age());
@@ -72,9 +73,9 @@ public class StudentService {
 	}
 	
 	@Transactional
-	public String assignBookToStudent(int studentId, int bookId) {
+	public String assignBookToStudent(int studentId, int bookId) throws Throwable {
 		
-		Student student = studentRepo.findById(studentId);
+		Student student = (Student) studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
 		
 		Book book = booksRepo.findById(bookId)
 			.orElseThrow(() -> new RuntimeException("Book not found"));
@@ -95,16 +96,16 @@ public class StudentService {
 	}
 	
 	
-	public List<BooksDto> getBooksOfStudent(int studentId){
-		Student student = studentRepo.findById(studentId);
+	public List<BooksDto> getBooksOfStudent(int studentId) throws Throwable {
+		Student student = (Student) studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
 		return (List<BooksDto>) student.getBooks()
 					.stream()
 					.map(book -> new BooksDto(book.getTitle(),
 						book.getAuthor()));
 	}
 	
-	public void deleteBookFromStudent(int studentId , int bookId){
-		Student student = studentRepo.findById(studentId);
+	public void deleteBookFromStudent(int studentId , int bookId) throws Throwable {
+		Student student = (Student) studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
 		Book book = booksRepo.findById(bookId).orElse(null);
 		student.getBooks().remove(book);
 		studentRepo.save(student);
@@ -112,9 +113,9 @@ public class StudentService {
 	
 	//Course Assignment Methods here
 	@Transactional
-	public String enrollStudentInCourse(int studentId, int courseId) {
+	public String enrollStudentInCourse(int studentId, int courseId) throws Throwable {
 		
-		Student student = studentRepo.findById(studentId);
+		Student student = (Student) studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
 		
 		Course course = coursesRepo.findById(courseId)
 			.orElseThrow(() -> new RuntimeException("Course not found"));
@@ -128,17 +129,17 @@ public class StudentService {
 	}
 	
 	
-	public Set<Course> getStudentCourses(int studentId) {
-		Student student = studentRepo.findById(studentId);
+	public Set<Course> getStudentCourses(int studentId) throws Throwable {
+		Student student = (Student) studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
 		
 		return student.getCourses();
 	}
 	
 	
 	@Transactional
-	public void removeStudentFromCourse(int studentId, int courseId) {
+	public void removeStudentFromCourse(int studentId, int courseId) throws Throwable {
 		
-		Student student = studentRepo.findById(studentId);
+		Student student = (Student) studentRepo.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
 		
 		Course course = coursesRepo.findById(courseId)
 			.orElseThrow(() -> new RuntimeException("Course not found"));

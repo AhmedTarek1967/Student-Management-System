@@ -24,7 +24,7 @@ public class StudentController {
 	}
 	
 	@GetMapping("/{id}")
-	public StudentName getStudentById(@PathVariable int id){
+	public StudentName getStudentById(@PathVariable int id) throws Throwable {
 		return studentService.getStudentById(id);
 	}
 	
@@ -35,7 +35,7 @@ public class StudentController {
 	}
 	
 	@PutMapping("/{id}")
-	public StudentResponseDto updateStudentById(@PathVariable int id,@RequestBody StudentDto studentDto){
+	public StudentResponseDto updateStudentById(@PathVariable int id,@RequestBody StudentDto studentDto) throws Throwable {
 		
 		return studentService.updateStudentById(id,studentDto);
 		
@@ -48,7 +48,7 @@ public class StudentController {
 	
 	
 	@PostMapping("/{studentId}/books/{bookId}")
-	public String assignBookToStudent(@PathVariable int studentId, @PathVariable int bookId){
+	public String assignBookToStudent(@PathVariable int studentId, @PathVariable int bookId) throws Throwable {
 		return studentService.assignBookToStudent(studentId,bookId);
 	}
 	
@@ -58,28 +58,28 @@ public class StudentController {
 	}
 	
 	@GetMapping("/{studentId}/books")
-	public List<BooksDto> getBooksOfStudent(@PathVariable int studentId){
+	public List<BooksDto> getBooksOfStudent(@PathVariable int studentId) throws Throwable {
 		return studentService.getBooksOfStudent(studentId);
 	}
 	
 	@DeleteMapping("/{studentId}/books/{bookId}")
-	public void deleteBookFromStudent(@PathVariable int studentId, @PathVariable int bookId){
+	public void deleteBookFromStudent(@PathVariable int studentId, @PathVariable int bookId) throws Throwable {
 		studentService.deleteBookFromStudent(studentId,bookId);
 	}
 	
 	//Course Endpoints
 	@PostMapping("/{studentId}/courses/{courseId}")
-	public String enrollStudentInCourse(@PathVariable int studentId, @PathVariable int courseId){
+	public String enrollStudentInCourse(@PathVariable int studentId, @PathVariable int courseId) throws Throwable {
 		return studentService.enrollStudentInCourse(studentId,courseId);
 	}
 	
 	@GetMapping("/students/{studentId}/courses")
-	public Set<Course> getStudentCourses(@PathVariable int courseId){
+	public Set<Course> getStudentCourses(@PathVariable int courseId) throws Throwable {
 		return studentService.getStudentCourses(courseId);
 	}
 	
 	@DeleteMapping("/students/{studentId}/courses/{courseId}")
-	public void deleteCourseFromStudent(@PathVariable int studentId, @PathVariable int courseId){
+	public void deleteCourseFromStudent(@PathVariable int studentId, @PathVariable int courseId) throws Throwable {
 		studentService.removeStudentFromCourse(studentId,courseId);
 	}
 	
